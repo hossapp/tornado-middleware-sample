@@ -1,11 +1,19 @@
+#!/usr/bin/env python
+
+import logging
 import os
 
 import tornado.ioloop
 import tornado.web
+import tornado.httpserver
 from tornado import gen
 from tornado.httpclient import AsyncHTTPClient
+from tornado.options import define, options
 
 import hoss_agent.middleware.tornado as HossMiddleware
+
+
+define("port", default="8000", help="Listening port", type=str)
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -35,13 +43,21 @@ def make_app():
     return app
 
 
-if __name__ == "__main__":
-    app = make_app()
-    app.listen(os.environ.get('PORT'))
+def main():
+    tornado.options.parse_command_line()
+    print "Server listening on port " + str(options.port)
+    logging.getLogger().setLevel(logging.INFO)
+    http_server = tornado.httpserver.HTTPServer(make_app())
 
     # initialize Hoss middleware before starting IOLoop
     HossMiddleware.init(os.environ.get('HOSS_API_KEY'), {
         "USER_DATA_FN": get_user,
         "SHOULD_SKIP_FN": should_skip
     })
+
+    http_server.listen(options.port)
     tornado.ioloop.IOLoop.current().start()
+
+
+if __name__ == "__main__":
+    main()

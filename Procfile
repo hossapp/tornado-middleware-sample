@@ -1,1 +1,1 @@
-web: bin/python api.py
+web: python api.py --port=$PORT

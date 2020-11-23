@@ -26,14 +26,14 @@ class MainHandler(tornado.web.RequestHandler):
 
 def get_user(handler):
     return {
-        "userId": handler.request.query_arguments.get('userId', 'uuid'),
-        "email": handler.request.query_arguments.get('email', 'sample@example.com'),
-        "username": handler.request.query_arguments.get('userName', 'userName')
+        "userId": handler.request.query_arguments.get('userId', ['uuid'])[0],
+        "email": handler.request.query_arguments.get('email', ['sample@example.com'])[0],
+        "username": handler.request.query_arguments.get('userName', ['userName'])[0]
     }
 
 
 def should_skip(handler):
-    return handler.request.query_arguments.get('shouldSkip', False),
+    return False
 
 
 def make_app():

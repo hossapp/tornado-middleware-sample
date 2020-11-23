@@ -45,7 +45,7 @@ def make_app():
 
 def main():
     tornado.options.parse_command_line()
-    print "Server listening on port " + str(options.port)
+    print "Server listening on port: " + str(options.port)
     logging.getLogger().setLevel(logging.INFO)
     http_server = tornado.httpserver.HTTPServer(make_app())
 
